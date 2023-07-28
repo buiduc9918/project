@@ -1,0 +1,13 @@
+GET url HTTP/127.0.0.1:8080/interns
+
+
+PUT url HTTP/127.0.0.1:8080/interns/3
+Content-Type: application/json
+{
+    "name":"kien",
+    "age" : 22 ,
+    "university" : "ptit",
+    "email":"kien@gmail.com"
+}
+
+DELETE url HTTP/127.0.0.1:8080/interns/1

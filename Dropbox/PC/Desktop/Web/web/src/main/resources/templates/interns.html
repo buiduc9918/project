@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interns List</title>
+</head>
+<body>
+    <h1>Interns List</h1>
+    <ul>
+        <li th:each="intern : ${interns}">
+            <p th:text="${intern.name} + ' | ' + ${intern.age} + ' | ' + ${intern.university} + ' | ' + ${intern.email}"></p>
+            <!-- Form for updating intern details -->
+            <form th:action="@{/interns/{id}(id=${intern.id})}" method="post">
+                <input type="hidden" name="_method" value="put" />
+                <input type="text" name="name" placeholder="Name" />
+                <input type="number" name="age" placeholder="Age" />
+                <input type="text" name="university" placeholder="University" />
+                <input type="email" name="email" placeholder="Email" />
+                <button type="submit">Update</button>
+            </form>
+            <!-- Form for deleting an intern -->
+            <form th:action="@{/interns/{id}(id=${intern.id})}" method="post">
+                <input type="hidden" name="_method" value="delete" />
+                <button type="submit">Delete</button>
+            </form>
+        </li>
+    </ul>
+
+    <h2>Add New Intern</h2>
+    <form id="addInternForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <br>
+
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" required>
+        <br>
+
+        <label for="university">University:</label>
+        <input type="text" id="university" name="university" required>
+        <br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br>
+
+        <input type="submit" value="Add Intern">
+    </form>
+
+    <script>
+        // ... JavaScript code for adding a new intern (from the previous response) ...
+
+        // Function to update an intern's details
+        function updateIntern(internId) {
+            const intern = {
+                name: prompt("Enter updated name:"),
+                age: parseInt(prompt("Enter updated age:")),
+                university: prompt("Enter updated university:"),
+                email: prompt("Enter updated email:")
+            };
+
+            fetch(`/interns/${internId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(intern)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Intern updated successfully!");
+                    // Reload the page to display the updated data
+                    location.reload();
+                } else {
+                    alert("Failed to update intern.");
+                }
+            })
+            .catch(error => console.error("Error updating intern:", error));
+        }
+
+        // Function to delete an intern
+        function deleteIntern(internId) {
+            if (confirm("Are you sure you want to delete this intern?")) {
+                fetch(`/interns/${internId}`, {
+                    method: "DELETE",
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Intern deleted successfully!");
+                        // Reload the page to reflect the changes
+                        location.reload();
+                    } else {
+                        alert("Failed to delete intern.");
+                    }
+                })
+                .catch(error => console.error("Error deleting intern:", error));
+            }
+        }
+    </script>
+</body>
+</html>
