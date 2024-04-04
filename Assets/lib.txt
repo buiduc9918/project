@@ -1,0 +1,244 @@
+﻿//private Transform transformObject;
+//private Vector3 targetPosition;
+
+//private void Awake()
+//{
+//    transformObject = GetComponent<Transform>();
+//}
+
+//void Update()
+//{
+//    if (Input.GetMouseButton(0))
+//    {
+//        Vector3 mousePosition = Input.mousePosition;
+//        Vector3 targetPosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, Camera.main.transform.position.y));
+//        targetPosition.z = 0f;
+
+//        Vector3 direction = targetPosition - transformObject.position;
+//        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+//        transformObject.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+//    }
+
+//    transformObject.position = Vector3.MoveTowards(transformObject.position, targetPosition, 5 * Time.deltaTime);
+//}
+
+/*
+public class MovermentWithMouseOnclick : MonoBehaviour
+{
+    [SerializeField] private float strength = 5f;
+    [SerializeField] private float gravity = 9.8f;
+    [SerializeField] private int world = 1;
+    [SerializeField] private Vector2 direction = Vector2.up;
+    private Rigidbody2D birdRb;
+    private Transform birdTransform;
+    private void Awake()
+    {
+        birdRb = GetComponent<Rigidbody2D>();
+        birdTransform = transform;
+    }
+    private void Update() => GroundedMovement();
+    private void GroundedMovement()
+    {
+        if (Input.GetMouseButtonDown(0) && !birdRb.isKinematic)
+        {
+            birdRb.velocity = direction * strength;
+            birdTransform.eulerAngles = new Vector3(0, 0, 30);
+        }
+        else if (Input.GetMouseButtonUp(0) && !birdRb.isKinematic) birdTransform.eulerAngles = new Vector3(0, 0, -10);
+        else if (Input.GetMouseButton(0) && !birdRb.isKinematic) birdTransform.eulerAngles = new Vector3(0, 0, 10);
+    }
+}
+public class MovementWithMouseMatchHorizon : MonoBehaviour
+{
+    public float horizontalSpeed = 3f;
+    public float verticalSpeed = 3f;
+    // Adjust the vertical speed as needed
+    private RectTransform rectTransform;
+    public float inputAxis => Input.GetAxis("Horizontal");
+    public float inputAxit2 => Input.GetMouseButton(0) ? 1 : -1;
+    // Set to 1 if "W" is pressed, -1 if "S" is pressed, 0 otherwise
+    private void Start()
+    {
+        rectTransform = GetComponent<RectTransform>();
+    }
+    private void Update()
+    {
+        Vector2 movement = new Vector2(inputAxis, inputAxit2) * new Vector2(horizontalSpeed, verticalSpeed) * Time.deltaTime;
+        transform.Translate(movement);
+        // Check if rotation is not aligned with Z-axis and reset it
+        rectTransform.rotation = Quaternion.Euler(0, 0, 0);
+    }
+}
+
+   */
+
+/*
+private void Start() => StartCoroutine(Spawn());
+public GameObject a;
+public GameObject player;
+float inputVertical = Input.GetAxis("Vertical");
+
+Lấy vị trí của con trỏ chuột trong không gian màn hình
+Vector3 mousePosition = Input.mousePosition;
+
+Chuyển đổi vị trí của con trỏ chuột từ không gian màn hình sang không gian thế giới của trò chơi
+Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, Camera.main.transform.position.y));
+
+Tính toán góc quay giữa vị trí hiện tại của đối tượng và vị trí của con trỏ chuột
+Vector3 direction = mouseWorldPosition - transform.position;
+float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+Áp dụng góc quay này cho đối tượng
+transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+Vector3 targetPosition;
+
+Lấy vị trí của chuột trên màn hình
+targetPosition.z = transform.position.z;
+
+Di chuyển đến vị trí của chuột với tốc độ cố định
+transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * Speed);
+transform.position = Vector3.Lerp(transform.position, targetPosition, Speed * Time.deltaTime);
+Vector3 direction = mouseWorldPosition - transform.position;
+float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+Áp dụng góc quay này cho đối tượng
+transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+transform.position = Vector3.Lerp(transform.position, targetPosition, Speed * Time.deltaTime);
+*/
+/*
+using System;
+using UnityEngine;
+
+public class RotationWithMovermentHorizon : MonoBehaviour
+{
+   private MovementWithMouseMatchHorizon movement;
+   private SpriteRenderer spriteRenderer;
+   private RectTransform tranform;
+   public Sprite[] sprite;
+
+   void Start()
+   {
+       spriteRenderer = GetComponent<SpriteRenderer>();
+       tranform = GetComponent<tranform>();
+
+       try
+       {
+           movement = GetComponent<MovementWithMouseMatchHorizon>();
+       }
+       catch (Exception ex)
+       {
+           Debug.Log(ex.Message);
+       }
+   }
+
+   void Update()
+   {
+       try
+       {
+
+           if (movement.inputAxis > 0) spriteRenderer.flipX = false;
+           else if (movement.inputAxis < 0) spriteRenderer.flipX = true;
+           spriteRenderer.sprite = sprite[1];
+           if (movement.inputAxit2 > 0) spriteRenderer.sprite = sprite[0];
+           else if (movement.inputAxit2 < 0) spriteRenderer.sprite = sprite[2];
+           rectTransform.rotation = Quaternion.Euler(0, 0, 0);
+       }
+       catch (Exception ex1)
+       {
+           Debug.Log(ex1.Message);
+
+       }
+   }
+}
+
+using UnityEngine;
+
+public class Script2 : MonoBehaviour
+{
+   private Movement movement;
+   private SpriteRenderer spriteRenderer;
+   public Sprite[] sprite;
+   private bool test;
+   private Rigidbody2D rb2D;
+   private Coroutine spriteCoroutine;
+
+   void Start()
+   {
+       rb2D = GetComponent<Rigidbody2D>();
+       spriteRenderer = GetComponent<SpriteRenderer>();
+       movement = GetComponent<Movement>();
+
+       // Bắt đầu coroutine khi Start được gọi
+       StartSpriteLib();
+   }
+
+   void Update()
+   {
+       if (movement.inputAxis > 0)
+       {
+           spriteRenderer.flipX = false;
+       }
+       else if (movement.inputAxis < 0)
+       {
+           spriteRenderer.flipX = true;
+       }
+
+       if (movement.inputAxit2 > 0)
+       {
+           spriteRenderer.sprite = sprite[0];
+           spriteRenderer.sprite = sprite[1];
+       }
+       else if (movement.inputAxit2 < 0)
+       {
+           spriteRenderer.sprite = sprite[1];
+
+       }
+
+       // Kiểm tra sự thay đổi của test trước khi gọi coroutine
+       bool newTestValue = transform.position.y > -3.78f;
+       if (newTestValue != test)
+       {
+           test = newTestValue;
+           if (test)
+           {
+               // Nếu test chuyển sang true, bắt đầu coroutine mới
+               if (spriteCoroutine == null)
+               {
+                   StartSpriteLib();
+               }
+           }
+           else
+           {
+               // Nếu test chuyển sang false, dừng coroutine hiện tại nếu có
+               if (spriteCoroutine != null)
+               {
+                   StopCoroutine(spriteCoroutine);
+                   spriteCoroutine = null;
+               }
+           }
+       }
+   }
+
+   Hàm bắt đầu coroutine SpriteLib
+       private void StartSpriteLib()
+   {
+       if (spriteCoroutine == null)
+       {
+           spriteCoroutine = StartCoroutine(SpriteLib());
+       }
+   }
+
+   IEnumerator SpriteLib()
+   {
+       int i = 0;
+       while (test)
+       {
+           yield return new WaitForSeconds(0.1f);
+           spriteRenderer.sprite = sprite[i];
+           i++;
+           i = i % sprite.Length;
+       }
+   }
+}
+}
+      */
